@@ -4,7 +4,7 @@
 #include <queue>
 using namespace std;
 
-const int SIZE = 7;
+const int SIZE = 10;
 
 struct Edge {
     int src, dest, weight;
@@ -103,8 +103,20 @@ public:
 int main() {
     // Creates a vector of graph edges/weights
     vector<Edge> edges = {
-        // (x, y, w) —> edge from x to y having weight w
-        {0,1,12},{0,2,8},{0,3,21},{2,3,6},{2,6,2},{5,6,6},{4,5,9},{2,4,4},{2,5,5}
+        // (x, y, w) —> connection between locations with walking time in minutes
+        {0,1,2},   // Building Entrance - Suite Entrance
+        {1,2,3},   // Suite Entrance - Research Lab
+        {1,3,2},   // Suite Entrance - Intake
+        {3,4,4},   // Intake - Processing
+        {4,5,2},   // Processing - Storage Room
+        {1,6,3},   // Suite Entrance - Break Room
+        {1,7,2},   // Suite Entrance - Office Space
+        {7,8,3},   // Office Space - Conference Room
+        {4,9,5},   // Processing - Shipping
+        {5,9,4},   // Storage Room - Shipping
+        {2,7,4},   // Research Lab - Office Space
+        {3,7,5},   // Intake - Office Space
+        {6,8,6}    // Break Room - Conference Room
     };
 
     // Creates graph
