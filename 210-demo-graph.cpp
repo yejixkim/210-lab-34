@@ -2,9 +2,22 @@
 #include <vector>
 #include <stack>
 #include <queue>
+#include <string>
 using namespace std;
 
 const int SIZE = 10;
+const string locations[SIZE] = {
+    "Building Entrance",
+    "Suite Entrance",
+    "Research Lab",
+    "Intake",
+    "Processing",
+    "Storage Room",
+    "Break Room",
+    "Office Space",
+    "Conference Room",
+    "Shipping"
+};
 
 struct Edge {
     int src, dest, weight;
@@ -37,14 +50,20 @@ public:
 
     // Print the graph's adjacency list
     void printGraph() {
-        cout << "Graph's adjacency list:" << endl;
-        for (int i = 0; i < adjList.size(); i++) {
-            cout << i << " --> ";
-            for (Pair v : adjList[i])
-                cout << "(" << v.first << ", " << v.second << ") ";
-            cout << endl;
+    cout << "Genomics Laboratory Navigation System" << endl;
+    cout << "Adjacency List:" << endl;
+
+    for (int i = 0; i < adjList.size(); i++) {
+        cout << locations[i] << " --> ";
+
+        for (Pair v : adjList[i]) {
+            cout << "(" << locations[v.first]
+                 << ", " << v.second << " min) ";
         }
+
+        cout << endl;
     }
+}
 
         void DFS(int start) {
         vector<bool> visited(adjList.size(), false);
@@ -52,14 +71,14 @@ public:
 
         s.push(start);
 
-        cout << "DFS starting from vertex " << start << ":" << endl;
+        cout << "DFS starting from " << locations[start] << ":" << endl;
 
         while (!s.empty()) {
             int vertex = s.top();
             s.pop();
 
             if (!visited[vertex]) {
-                cout << vertex << " ";
+                cout << locations[vertex] << " -> ";
                 visited[vertex] = true;
 
                 for (Pair neighbor : adjList[vertex]) {
@@ -80,13 +99,13 @@ public:
         q.push(start);
         visited[start] = true;
 
-        cout << "BFS starting from vertex " << start << ":" << endl;
+        cout << "BFS starting from " << locations[start] << ":" << endl;
 
         while (!q.empty()) {
             int vertex = q.front();
             q.pop();
 
-            cout << vertex << " ";
+            cout << locations[vertex] << " -> ";
 
             for (Pair neighbor : adjList[vertex]) {
                 if (!visited[neighbor.first]) {
