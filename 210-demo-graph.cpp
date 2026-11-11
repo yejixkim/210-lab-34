@@ -3,6 +3,7 @@
 #include <stack>
 #include <queue>
 #include <string>
+#include <limits>
 using namespace std;
 
 const int SIZE = 10;
@@ -117,6 +118,67 @@ public:
 
         cout << endl;
     }
+
+        void shortestPath(int start, int end) {
+        vector<int> dist(SIZE, numeric_limits<int>::max());
+        vector<int> previous(SIZE, -1);
+        vector<bool> visited(SIZE, false);
+
+        dist[start] = 0;
+
+        for (int i = 0; i < SIZE; i++) {
+            int current = -1;
+            int minDist = numeric_limits<int>::max();
+
+            // Find the unvisited vertex with the smallest distance
+            for (int j = 0; j < SIZE; j++) {
+                if (!visited[j] && dist[j] < minDist) {
+                    minDist = dist[j];
+                    current = j;
+                }
+            }
+
+            if (current == -1)
+                break;
+
+            visited[current] = true;
+
+            // Update distances to neighboring vertices
+            for (Pair neighbor : adjList[current]) {
+                int next = neighbor.first;
+                int weight = neighbor.second;
+
+                if (!visited[next] && dist[current] + weight < dist[next]) {
+                    dist[next] = dist[current] + weight;
+                    previous[next] = current;
+                }
+            }
+        }
+
+        if (dist[end] == numeric_limits<int>::max()) {
+            cout << "No route found." << endl;
+            return;
+        }
+
+        // Reconstruct the shortest path
+        vector<int> path;
+        for (int at = end; at != -1; at = previous[at]) {
+            path.push_back(at);
+        }
+
+        cout << "Shortest path from " << locations[start]
+             << " to " << locations[end] << ":" << endl;
+
+        for (int i = path.size() - 1; i >= 0; i--) {
+            cout << locations[path[i]];
+
+            if (i > 0)
+                cout << " -> ";
+        }
+
+        cout << endl;
+        cout << "Total walking time: " << dist[end] << " minutes" << endl;
+    }
 };
 
 int main() {
@@ -146,6 +208,8 @@ int main() {
 
     graph.DFS(0);
     graph.BFS(0);
+
+    graph.shortestPath(0, 9);
 
     return 0;
 }
