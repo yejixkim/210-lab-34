@@ -4,6 +4,7 @@
 #include <queue>
 #include <string>
 #include <limits>
+#include <algorithm>
 using namespace std;
 
 const int SIZE = 10;
@@ -179,6 +180,66 @@ public:
         cout << endl;
         cout << "Total walking time: " << dist[end] << " minutes" << endl;
     }
+
+        void minimumSpanningTree() {
+        vector<Edge> edges;
+
+        // Collect every edge from the adjacency list
+        for (int i = 0; i < adjList.size(); i++) {
+            for (Pair neighbor : adjList[i]) {
+                if (i < neighbor.first) {
+                    edges.push_back({i, neighbor.first, neighbor.second});
+                }
+            }
+        }
+
+        // Sort edges by weight (smallest first)
+        sort(edges.begin(), edges.end(),
+             [](Edge a, Edge b) {
+                 return a.weight < b.weight;
+             });
+
+        vector<int> parent(SIZE);
+        for (int i = 0; i < SIZE; i++) {
+            parent[i] = i;
+        }
+
+        // Find the root of a set
+        auto find = [&](int vertex) {
+            while (parent[vertex] != vertex) {
+                vertex = parent[vertex];
+            }
+            return vertex;
+        };
+
+        int totalWeight = 0;
+        int edgesAdded = 0;
+
+        cout << "Minimum Spanning Tree:" << endl;
+
+        // Add edges that do not create a cycle
+        for (Edge edge : edges) {
+            int root1 = find(edge.src);
+            int root2 = find(edge.dest);
+
+            if (root1 != root2) {
+                cout << locations[edge.src] << " - "
+                     << locations[edge.dest] << ": "
+                     << edge.weight << " min" << endl;
+
+                parent[root1] = root2;
+                totalWeight += edge.weight;
+                edgesAdded++;
+
+                if (edgesAdded == SIZE - 1) {
+                    break;
+                }
+            }
+        }
+
+        cout << "Total MST walking time: "
+             << totalWeight << " minutes" << endl;
+    }
 };
 
 int main() {
@@ -210,6 +271,8 @@ int main() {
     graph.BFS(0);
 
     graph.shortestPath(0, 9);
+
+    graph.minimumSpanningTree();
 
     return 0;
 }
